@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node aetherai.cjs",
-    "build": "npx esbuild src/index.js --bundle --platform=node --format=cjs --minify --outfile=aetherai.cjs",
+    "build:local": "npx esbuild src/index.js --bundle --platform=node --format=cjs --minify --outfile=aetherai.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
