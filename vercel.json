@@ -1,6 +1,4 @@
 {
-  "buildCommand": "mkdir -p public && cp index.html install.ps1 install.sh aetherai.cjs public/ || true",
-  "outputDirectory": "public",
   "cleanUrls": false,
   "redirects": [
     {
