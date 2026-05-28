@@ -1,6 +1,6 @@
 {
   "buildCommand": "echo 'No build step required'",
-  "outputDirectory": ".",
+  "outputDirectory": "public",
   "cleanUrls": false,
   "redirects": [
     {
