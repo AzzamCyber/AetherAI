@@ -5,7 +5,7 @@ try {
     fs.mkdirSync('public');
   }
 
-  const files = ['index.html', 'install.ps1', 'install.sh', 'aetherai.cjs'];
+  const files = ['index.html', 'docs.html', 'privacy.html', 'terms.html', 'install.ps1', 'install.sh', 'aetherai.cjs'];
   
   for (const file of files) {
     if (fs.existsSync(file)) {

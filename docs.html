@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Documentation | Aether AI</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { primary: "#00677f", "surface-variant": "#dee3e5", "on-surface": "#191c1f", "on-surface-variant": "#40484c" },
+                    fontFamily: { "body-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "code-sm": ["JetBrains Mono"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f7f9fa; color: #191c1f; }
+        .dark body { background-color: #05070A; color: #e1e2e7; }
+    </style>
+</head>
+<body class="font-body-md text-on-surface">
+    <!-- Header -->
+    <header class="sticky top-0 w-full z-50 bg-white/80 dark:bg-[#111]/80 backdrop-blur-xl border-b border-black/10 dark:border-white/10">
+        <nav class="flex justify-between items-center h-20 px-8 max-w-7xl mx-auto">
+            <a href="index.html" class="flex items-center gap-4 text-on-surface font-bold text-xl hover:text-primary transition-colors">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Aether AI
+            </a>
+            <div class="flex items-center gap-6">
+                <button class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all" id="theme-toggle">
+                    <span class="material-symbols-outlined text-primary">light_mode</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-4xl mx-auto py-16 px-8 min-h-screen">
+        <h1 class="text-4xl font-headline-lg font-bold mb-6">Documentation</h1>
+        <p class="text-lg text-on-surface-variant mb-12">Panduan lengkap penggunaan Aether AI CLI, model referensi, dan dokumentasi API.</p>
+        
+        <div class="bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-xl p-8 mb-8">
+            <h2 class="text-2xl font-bold mb-4">Nanti Lengkap...</h2>
+            <p class="text-on-surface-variant">Halaman dokumentasi sedang dalam tahap penyusunan. Nantinya, halaman ini akan berisi:</p>
+            <ul class="list-disc ml-6 mt-4 space-y-2 text-on-surface-variant">
+                <li>Instalasi dan Konfigurasi Lanjutan</li>
+                <li>Panduan Penggunaan Command Line (CLI)</li>
+                <li>Daftar Parameter dan Flag yang didukung</li>
+                <li>Integrasi dengan Git dan CI/CD Pipeline</li>
+                <li>Troubleshooting Umum</li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-8 border-t border-black/10 dark:border-white/10 bg-white dark:bg-[#05070A]">
+        <div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center text-sm text-on-surface-variant">
+            <span>© 2024 Azzam Codex. All rights reserved.</span>
+            <div class="flex gap-4 mt-4 md:mt-0">
+                <a href="index.html" class="hover:text-primary">Home</a>
+                <a href="https://github.com/AzzamCyber" target="_blank" class="hover:text-primary">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dark/Light Mode Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        themeToggle.addEventListener('click', () => {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                themeToggle.querySelector('span').textContent = 'light_mode';
+            } else {
+                html.classList.add('dark');
+                themeToggle.querySelector('span').textContent = 'dark_mode';
+            }
+        });
+    </script>
+</body>
+</html>
