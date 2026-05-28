@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aether AI - CLI Intelligence by Azzam Codex</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "on-secondary-fixed": "#2c0051",
+                    "tertiary-container": "#b1c1db",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "primary-container": "#e0f7ff",
+                    "surface-dim": "#f8f9fa",
+                    "outline": "#859399",
+                    "background": "#FFFFFF",
+                    "tertiary-fixed": "#d3e4fe",
+                    "surface-bright": "#ffffff",
+                    "error": "#ba1a1a",
+                    "secondary-fixed": "#f0dbff",
+                    "error-container": "#ffdad6",
+                    "inverse-surface": "#2e3134",
+                    "surface-variant": "#dee3e5",
+                    "on-secondary-fixed-variant": "#6900b3",
+                    "surface": "#FFFFFF",
+                    "inverse-primary": "#4cd6ff",
+                    "surface-container-low": "#f7f9fa",
+                    "on-primary-container": "#001f28",
+                    "outline-variant": "#bfc8cb",
+                    "primary": "#00677f",
+                    "on-background": "#191c1f",
+                    "primary-fixed-dim": "#4cd6ff",
+                    "secondary-fixed-dim": "#ddb7ff",
+                    "surface-container-highest": "#e1e2e7",
+                    "on-surface": "#191c1f",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#b7eaff",
+                    "tertiary": "#4f5f71",
+                    "secondary": "#7c4dff",
+                    "on-primary-fixed": "#001f28",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#f0f1f3",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-container": "#0b1c30",
+                    "on-secondary-container": "#2c0051",
+                    "surface-tint": "#00677f",
+                    "on-error-container": "#410002",
+                    "on-primary-fixed-variant": "#004e60",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "inverse-on-surface": "#f0f1f3",
+                    "surface-container-high": "#eaeaec",
+                    "on-surface-variant": "#40484c",
+                    "secondary-container": "#f0dbff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "section-gap": "64px",
+                    "container-margin": "24px",
+                    "stack-md": "16px",
+                    "gutter": "16px",
+                    "stack-lg": "32px",
+                    "stack-sm": "8px"
+            },
+            "fontFamily": {
+                    "code-sm": ["JetBrains Mono"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "label-caps": ["JetBrains Mono"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "code-md": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "code-sm": ["12px", {"lineHeight": "18px", "fontWeight": "450"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "code-md": ["14px", {"lineHeight": "20px", "fontWeight": "450"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #FFFFFF;
+            color: #191c1f;
+            scroll-behavior: smooth;
+        }
+        .glass-panel {
+            background: rgba(0, 0, 0, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+        .glow-border:focus-within {
+            border-color: #00677f;
+            box-shadow: 0 0 15px rgba(0, 103, 127, 0.1);
+        }
+        .terminal-header {
+            background: rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .cursor-blink {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .grid-pattern {
+            background-image: radial-gradient(circle, rgba(0, 103, 127, 0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+        .dark body {
+            background-color: #05070A;
+            color: #e1e2e7;
+        }
+        .dark .glass-panel {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- Header (Shared Component: TopNavBar) -->
+<header class="sticky top-0 w-full z-50 bg-white/80 dark:bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30">
+<nav class="flex justify-between items-center h-20 px-container-margin max-w-7xl mx-auto">
+<div class="flex items-center gap-stack-md">
+<img alt="Aether AI Logo" class="w-auto h-24 md:h-32 transform -translate-x-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArdfh7ePBnk8QhpSD0Af_SYZafUFe_VJucDKdZj1nQqRtHjvIW1eAyL8TK6SmEFhKWzejuUrpAdhE36mByNju7cg_wCHR04B_e853hnuLI7pz9cYReJFPo_hXWzAMtEldhWmyP1AjqD09ye15Mo163mX6CLp1FRbe-Hh3MGbXKRoBbUgSpArsOqvGLqprJEYBZ4x5jj7S9GEOiLWcW9ro85R1RX4f18vvhMBtW6mfwIFqEsqNfGve1q6Hn6FAIyLBXy08wuyoEJ6aJ"/>
+</div>
+<div class="hidden md:flex items-center gap-stack-lg">
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-colors font-semibold" href="#features">Features</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-colors font-semibold" href="#models">Models</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-colors font-semibold" href="#install">Install</a>
+<button class="p-2 rounded-full hover:bg-black/5 transition-all duration-200 active:scale-90" id="theme-toggle">
+<span class="material-symbols-outlined text-primary" data-icon="light_mode">light_mode</span>
+</button>
+</div>
+<div class="flex items-center gap-stack-sm">
+<a class="bg-primary text-on-primary px-stack-md py-2 rounded-lg font-headline-md text-body-md hover:brightness-110 active:scale-95 transition-all shadow-md" href="#install">Install Now</a>
+</div>
+</nav>
+</header>
+<main class="grid-pattern">
+<!-- Hero Section -->
+<section class="relative overflow-hidden pt-24 pb-section-gap px-container-margin transition-all duration-1000 opacity-100 translate-y-0 hero-section">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-stack-lg items-center">
+<div class="space-y-stack-lg hero-text">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary font-code-sm text-code-sm font-bold release-badge">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+                        v4.6 RELEASED
+                    </div>
+<h1 class="font-display-lg text-display-lg text-on-surface leading-tight hero-title">
+                        Aether AI: The Future of <span class="text-primary">CLI Intelligence</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl hero-desc">
+                        Experience the power of advanced AI models directly from your terminal. Built by Azzam Codex for developers who demand speed and precision.
+                    </p>
+<!-- Terminal CLI Box -->
+<div class="relative group max-w-2xl terminal-box">
+<div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-lg blur opacity-10 group-hover:opacity-20 transition duration-1000"></div>
+<div class="relative bg-surface-container-lowest rounded-lg border border-outline-variant/50 overflow-hidden shadow-xl">
+<div class="terminal-header px-4 py-2 flex items-center justify-between">
+<div class="flex gap-1.5">
+<div class="w-3 h-3 rounded-full bg-[#FF5F56]"></div>
+<div class="w-3 h-3 rounded-full bg-[#FFBD2E]"></div>
+<div class="w-3 h-3 rounded-full bg-[#27C93F]"></div>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant opacity-60">powershell — 80x24</span>
+</div>
+<div class="p-6 font-code-md text-code-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+<code class="text-primary font-bold overflow-x-auto whitespace-nowrap">
+<span class="text-on-surface-variant opacity-70">PS C:\&gt;</span> powershell -c "irm https://aetherai.azzamcodex.site/install.ps1 | iex"<span class="cursor-blink ml-1 border-r-4 border-primary"></span>
+</code>
+<button class="shrink-0 flex items-center gap-2 bg-black/5 hover:bg-black/10 text-on-surface border border-outline-variant px-4 py-2 rounded transition-all active:scale-95 group/btn" onclick="copyInstallCommand()">
+<span class="material-symbols-outlined text-[18px]" data-icon="content_copy">content_copy</span>
+<span class="" id="copy-text">Copy</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="relative hidden lg:block hero-img">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]"></div>
+<img alt="AI Concept" class="relative rounded-xl border border-black/5 shadow-2xl transition-all duration-700 hover:scale-105" src="https://lh3.googleusercontent.com/aida/ADBb0ujEUyIATWXoEAh1hHQoIY6d9W_LXzCM2-7aQ5RsWbh7Gfv03C2HjNDgDHZLs4eRo2qeGt7cPRI-tZSuO4PnbR5KcdE2J3GfJ5DsRQK5QRtUGghDco8sZlDNEtb71HEJSX6qkBPcECglQ3KjKHP4xcbNSnAaSgt3dusGfqunl5HpJLP3crc5pHmEerLtqOBfiTXKhpbK5SKeieJUOTmZB6UZU7NReyVm83ZS-AKF-65jSPUa8TDfxXVbuI4e"/>
+</div>
+</div>
+</section>
+<div class="relative w-full h-48 overflow-hidden border-y border-outline-variant/30 parallax-bg">
+<img alt="Background Tech" class="w-full h-full object-cover opacity-10 saturate-0" data-alt="A high-resolution wide shot of a futuristic server room with rows of glowing server racks emitting cool blue and electric cyan light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdCEX6OjkmlnaRNGZ1FIoaiyiXvKkJ9ZRmCxhj5NrcJRoQyzaUeEw_rOT-CUh4xilldSHnQp7v2aFeOi4SivTehwN3AT_Eqao8Sy7YgLG4h2jMwOwKKc1lFmhTa3zMX2T4P9hM26XeJbrdcEdafiyIhywwAzEjdjroMJwYlYNYzwAtAs2RgjseUAnbkYIObqh9KuIh8qo2Lm5uFmD8ejcfA_u2MKYk4ldgHS4CHGO6m4ZtRqU8tSzUf2GmBGM-BHUwKcdXJJGNxqpl"/>
+</div>
+<!-- Features Section -->
+<section class="py-section-gap px-container-margin transition-all duration-1000 opacity-100 translate-y-0" id="features">
+<div class="max-w-7xl mx-auto">
+<div class="mb-stack-lg space-y-2 feature-header">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Engineered for Efficiency</h2>
+<p class="font-body-md text-on-surface-variant font-medium">Precision tools built for the modern developer workflow.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter feature-grid">
+<!-- Feature 1 -->
+<div class="glass-panel p-8 rounded-xl border-t-4 border-t-transparent hover:border-t-primary transition-all group feature-card">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary text-[32px]" data-icon="bolt">bolt</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-4 text-on-surface">Ultra Fast Response</h3>
+<p class="font-body-md text-on-surface-variant leading-relaxed">
+                            Optimized streaming protocols ensure that AI responses appear in your terminal as they are being generated. Zero lag, pure performance.
+                        </p>
+</div>
+<!-- Feature 2 -->
+<div class="glass-panel p-8 rounded-xl border-t-4 border-t-transparent hover:border-t-secondary transition-all group feature-card">
+<div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center mb-6 group-hover:bg-secondary/20 transition-colors">
+<span class="material-symbols-outlined text-secondary text-[32px]" data-icon="layers">layers</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-4 text-on-surface">Multi-Model Support</h3>
+<p class="font-body-md text-on-surface-variant leading-relaxed">
+                            Switch between Claude, AetherAI Genesis, and Nexus models instantly. Choose the right brain for the right task without leaving your shell.
+                        </p>
+</div>
+<!-- Feature 3 -->
+<div class="glass-panel p-8 rounded-xl border-t-4 border-t-transparent hover:border-t-tertiary transition-all group feature-card">
+<div class="w-12 h-12 rounded-lg bg-tertiary/10 flex items-center justify-center mb-6 group-hover:bg-tertiary/20 transition-colors">
+<span class="material-symbols-outlined text-tertiary text-[32px]" data-icon="terminal">terminal</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-4 text-on-surface">Seamless Integration</h3>
+<p class="font-body-md text-on-surface-variant leading-relaxed">
+                            Built-in piping support allows you to feed files directly into Aether AI and output results into other terminal commands seamlessly.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- AI Models Showcase (Bento Grid Style) -->
+<section class="py-section-gap px-container-margin bg-surface-container-low transition-all duration-1000 opacity-100 translate-y-0" id="models">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-stack-lg gap-4 model-header">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">AI Model Ecosystem</h2>
+<p class="font-body-md text-on-surface-variant font-medium">The most powerful reasoning and coding engines available via CLI.</p>
+</div>
+<div class="flex gap-2">
+<span class="font-code-sm text-code-sm px-3 py-1 bg-white rounded border border-outline-variant text-on-surface-variant font-bold">TOTAL PARAMETERS: 450B+</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter model-grid">
+<!-- Card 1 -->
+<div class="glass-panel p-6 rounded-lg bg-white border border-outline-variant/30 hover:border-primary/50 transition-all model-card">
+<div class="flex justify-between items-start mb-6">
+<span class="text-primary font-label-caps text-label-caps bg-primary/10 px-2 py-1 rounded font-bold">CODING</span>
+<img alt="Claude AI Logo Icon" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida/ADBb0uiNKy7M5jO5yAJK05VY3matrY6IN8IqxNUzdJPSlmoPanIZxVRwf4koDff3vY5IwYzOkmBBj7ma912bJEAntQuFDMameAazFbjA4nXxA7Tu-ngY63c5URmdj0GvWdI7os-Xb1umtwZaBmPtfc0AKf2LS7nULmFaIf9hPMZeGY1Vbo5ydeHMHIivUKhC0mGa8exH1YnzF2hX0-iJHXYrxLx-hOYMBqXkHHfuO08u4WT8gx85g2mGnhtACqA"/>
+</div>
+<h4 class="font-headline-md text-headline-md mb-2 text-on-surface">Claude Code Opus 4.6</h4>
+<p class="font-body-md text-on-surface-variant text-sm">Superior capabilities in high-level programming and complex architectural logic.</p>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel p-6 rounded-lg bg-white border border-outline-variant/30 hover:border-primary/50 transition-all model-card">
+<div class="flex justify-between items-start mb-6">
+<span class="text-secondary font-label-caps text-label-caps bg-secondary/10 px-2 py-1 rounded font-bold">BALANCED</span>
+<img alt="Claude AI Logo Icon" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida/ADBb0uiNKy7M5jO5yAJK05VY3matrY6IN8IqxNUzdJPSlmoPanIZxVRwf4koDff3vY5IwYzOkmBBj7ma912bJEAntQuFDMameAazFbjA4nXxA7Tu-ngY63c5URmdj0GvWdI7os-Xb1umtwZaBmPtfc0AKf2LS7nULmFaIf9hPMZeGY1Vbo5ydeHMHIivUKhC0mGa8exH1YnzF2hX0-iJHXYrxLx-hOYMBqXkHHfuO08u4WT8gx85g2mGnhtACqA"/>
+</div>
+<h4 class="font-headline-md text-headline-md mb-2 text-on-surface">Claude Sonnet 4.6</h4>
+<p class="font-body-md text-on-surface-variant text-sm">Perfect equilibrium between high-speed responses and intelligent output.</p>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel p-6 rounded-lg bg-primary/5 border border-primary/30 ring-1 ring-primary/10 model-card">
+<div class="flex justify-between items-start mb-6">
+<span class="text-primary font-label-caps text-label-caps bg-primary/20 px-2 py-1 rounded font-bold">FLAGSHIP</span>
+<img alt="AetherAI Genesis Logo Icon" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida/ADBb0uiVFvQ12ekJednY8KqqxzQoSoO0dS54JXCrNZsMFPdqkBa6aWCPwMDQoeIdtfcfbtCdAKZyR61qRDAjIlRLeX-k4whVYLYC-vvTsDwwTtLCF_xQgY1vbBfcNiZRavi6tmMYfhPzLB4OBrIgDvOyuOWXoFpfNhTov6qKbz3PQTIZwUjxRq-H6Gf9qVnfooqqoe2w3HONTKD59IKqSKv5EP7KgFxuB9xMadG_n6Pyifw8OtPms6rrAvJcx2o"/>
+</div>
+<h4 class="font-headline-md text-headline-md mb-2 text-on-surface">Genesis-120B</h4>
+<p class="font-body-md text-on-surface-variant text-sm">Ultra-performance AetherAI original for massive datasets and deep research.</p>
+</div>
+<!-- Card 4 -->
+<div class="glass-panel p-6 rounded-lg bg-white border border-outline-variant/30 hover:border-primary/50 transition-all model-card">
+<div class="flex justify-between items-start mb-6">
+<span class="text-tertiary font-label-caps text-label-caps bg-tertiary/10 px-2 py-1 rounded font-bold">REASONING</span>
+<img alt="AetherAI Logic Logo Icon" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida/ADBb0ugAkxHR0OPtPxrx376qtkZ8u--dLr0wRFmuRNOYUO3TvFhjgDvT6pxzr1naF4JD-Nk-Xqs0OHk5C7UD8CM_wipVVOGdS-m2PZkz43LR1nI3itcLhHWbr_9QaRFlrYkAPhTHAbRgT41hYNvkibz1O6aHnb53K9Ax3PBI_Q9PqdIohsBtwsw0zI3949XdzwV8z00bS8vNj7-zKou8BBPQVJB0lVlpFmJYR9ZWbMhmbS1emYrlvxP6gGR8v9r0"/>
+</div>
+<h4 class="font-headline-md text-headline-md mb-2 text-on-surface">Logic-M1</h4>
+<p class="font-body-md text-on-surface-variant text-sm">Dedicated reasoning core designed for deep analysis and mathematical proofs.</p>
+</div>
+<!-- Card 5 -->
+<div class="glass-panel p-6 rounded-lg bg-white border border-outline-variant/30 hover:border-primary/50 transition-all model-card">
+<div class="flex justify-between items-start mb-6">
+<span class="text-on-surface-variant font-label-caps text-label-caps bg-surface-variant/40 px-2 py-1 rounded font-bold">GENERAL</span>
+<img alt="AetherAI Nexus Logo Icon" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida/ADBb0ujhvLf8meec18GiV71V-Ajs7ilpONyec8-kcy4DRc1fsstQqZPqq6HAiRSAJz__uRpZGyjOk4plFFW6CMMnZB8vF7VGMS8TTiELzC0BoTNsmw_iE877szZYVZ1A60uMbtxobXYtNyz0RetDMkU7v4UK3jRDhi8U5MDq3ZuJPLhP1WtOQDZLdhTtF0N8QHbO-KgszcUwv8YJUBaTL7rTODWEdiq2x__SBsr6Awcs-KS8GdwqxkUiOFcNmbO-"/>
+</div>
+<h4 class="font-headline-md text-headline-md mb-2 text-on-surface">Nexus-120B</h4>
+<p class="font-body-md text-on-surface-variant text-sm">A general-purpose powerhouse for creative tasks and everyday assistance.</p>
+</div>
+<!-- Card 6 -->
+<div class="glass-panel p-6 rounded-lg bg-white border border-outline-variant/30 hover:border-primary/50 transition-all model-card">
+<div class="flex justify-between items-start mb-6">
+<span class="text-error font-label-caps text-label-caps bg-error/10 px-2 py-1 rounded font-bold">LIGHTWEIGHT</span>
+<img alt="AetherAI Air Logo Icon" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida/ADBb0ugk35PBHlqck3Sukju2RVc0n4BgOm0mohv0J0xH3lbsbGmXipWDdLrLkV2lJhDQnLH70QlAIZzwrIZ41QqNEnlM70tNKFVaHDx_f0DS3wuYh6M4iXOFRlJh5nG17Ha15zzuLES1p3hVNRZMvpZ3th1IHAEviOmA7PlzcqYgLNW4vh0APzHf7y8Ic1Uq3BujVyd5qhbEfYUyPDzmh7YktVemm6qAGn46QKVFYZIuOMh5JCgXPm0oU8vTvgXe"/>
+</div>
+<h4 class="font-headline-md text-headline-md mb-2 text-on-surface">Air-4.5</h4>
+<p class="font-body-md text-on-surface-variant text-sm">Lightning-fast model optimized for quick queries and minimal bandwidth.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Installation Section -->
+<section class="py-section-gap px-container-margin relative transition-all duration-1000 opacity-100 translate-y-0 install-section" id="install">
+<div class="absolute inset-0 bg-primary/5 -skew-y-1 transform origin-bottom-left transition-all duration-1000" id="install-bg"></div>
+<div class="max-w-4xl mx-auto text-center relative z-10 install-content">
+<h2 class="font-display-lg text-headline-lg md:text-display-lg text-on-surface mb-stack-md">Ready to start?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-stack-lg font-medium">
+                    Join thousands of developers enhancing their terminal workflow with Aether AI. 
+                    Installation takes less than 10 seconds.
+                </p>
+<div class="bg-white dark:bg-surface-container-low rounded-xl border border-outline-variant/50 p-8 shadow-2xl space-y-6" id="install-card">
+<div class="flex items-center justify-center gap-3 text-primary">
+<span class="material-symbols-outlined" data-icon="info">info</span>
+<span class="font-code-sm text-code-sm uppercase tracking-widest font-bold">Run as Administrator on Windows</span>
+</div>
+<div class="relative bg-surface-container-low dark:bg-[#111] p-6 rounded-lg font-code-md text-code-md border border-outline-variant group transition-all duration-500 hover:shadow-lg">
+<code class="block text-primary font-bold break-all md:break-normal" id="install-cmd">
+                            powershell -c "irm https://aetherai.azzamcodex.site/install.ps1 | iex"
+                        </code>
+<div class="mt-4 flex justify-center">
+<button class="bg-primary text-on-primary px-8 py-3 rounded font-bold hover:brightness-110 flex items-center gap-2 transition-all active:scale-95 shadow-md" onclick="copyInstallCommand('install-cmd')">
+<span class="material-symbols-outlined" data-icon="content_copy">content_copy</span>
+                                Copy Command
+                            </button>
+</div>
+</div>
+<p class="font-code-sm text-code-sm text-on-surface-variant opacity-60">
+                        * Compatible with PowerShell 5.1+, PowerShell Core, and WSL (coming soon).
+                    </p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component: Footer) -->
+<footer class="w-full pt-16 pb-8 border-t border-outline-variant/30 bg-surface-container-lowest">
+<div class="max-w-7xl mx-auto px-container-margin">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-stack-lg mb-12 footer-grid">
+<!-- About Section -->
+<div class="col-span-1 md:col-span-2 space-y-4">
+<h4 class="font-headline-md text-headline-md text-on-surface">Aether AI</h4>
+<p class="font-body-md text-on-surface-variant max-w-md leading-relaxed">
+          Empowering developers with a high-performance CLI interface for the world's most advanced AI models. Built for speed, precision, and seamless terminal integration.
+        </p>
+</div>
+<!-- Developer Section -->
+<div class="space-y-4">
+<h4 class="font-label-caps text-label-caps text-primary">Developer</h4>
+<a class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group" href="https://github.com/AzzamCyber" target="_blank">
+<span class="material-symbols-outlined text-[20px]">code</span>
+<span class="font-body-md font-semibold">Azzam Codex</span>
+<span class="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</div>
+<!-- Links Section -->
+<div class="space-y-4">
+<h4 class="font-label-caps text-label-caps text-primary">Resources</h4>
+<ul class="space-y-2">
+<li><a class="font-body-md text-on-surface-variant hover:text-primary transition-colors" href="docs.html">Documentation</a></li>
+<li><a class="font-body-md text-on-surface-variant hover:text-primary transition-colors" href="https://github.com/AzzamCyber" target="_blank">GitHub Repository</a></li>
+<li><a class="font-body-md text-on-surface-variant hover:text-primary transition-colors" href="privacy.html">Privacy Policy</a></li>
+<li><a class="font-body-md text-on-surface-variant hover:text-primary transition-colors" href="terms.html">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-outline-variant/20 flex flex-col md:flex-row justify-between items-center gap-4">
+<span class="font-body-md text-on-surface-variant opacity-60 italic text-sm">© 2024 Azzam Codex. All rights reserved.</span>
+<div class="flex gap-6">
+<span class="font-code-sm text-code-sm text-primary/40 uppercase tracking-tighter">v4.6 Production</span>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Dark/Light Mode Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        
+        themeToggle.addEventListener('click', () => {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                themeToggle.querySelector('span').textContent = 'light_mode';
+                themeToggle.querySelector('span').setAttribute('data-icon', 'light_mode');
+                document.body.style.backgroundColor = '#FFFFFF';
+            } else {
+                html.classList.add('dark');
+                html.classList.remove('light');
+                themeToggle.querySelector('span').textContent = 'dark_mode';
+                themeToggle.querySelector('span').setAttribute('data-icon', 'dark_mode');
+                document.body.style.backgroundColor = '#05070A';
+            }
+        });
+
+        // Copy Command Function
+        function copyInstallCommand(id) {
+            const commandText = 'powershell -c "irm https://aetherai.azzamcodex.site/install.ps1 | iex"';
+            navigator.clipboard.writeText(commandText).then(() => {
+                const copyText = document.getElementById('copy-text');
+                if (copyText) {
+                    copyText.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyText.textContent = 'Copy';
+                    }, 2000);
+                }
+                
+                // Alert visual feedback
+                const btn = event.currentTarget;
+                const originalContent = btn.innerHTML;
+                btn.classList.add('bg-secondary', 'text-on-secondary');
+                btn.innerHTML = '<span class="material-symbols-outlined">check</span> Copied!';
+                setTimeout(() => {
+                    btn.classList.remove('bg-secondary', 'text-on-secondary');
+                    btn.innerHTML = originalContent;
+                }, 2000);
+            });
+        }
+
+        // --- GSAP ANIMATIONS ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Header animation on load
+        gsap.from("header", { y: -50, opacity: 0, duration: 1, ease: "power4.out" });
+
+        // Hero Section
+        gsap.from(".release-badge", { y: 20, opacity: 0, duration: 0.8, delay: 0.2, ease: "back.out(1.5)" });
+        gsap.from(".hero-title", { y: 30, opacity: 0, duration: 1, delay: 0.3, ease: "power3.out" });
+        gsap.from(".hero-desc", { y: 20, opacity: 0, duration: 0.8, delay: 0.5, ease: "power2.out" });
+        gsap.from(".terminal-box", { scale: 0.95, y: 40, opacity: 0, duration: 1, delay: 0.7, ease: "back.out(1.2)" });
+        gsap.from(".hero-img", { scale: 0.9, opacity: 0, rotation: 5, duration: 1.2, delay: 0.8, ease: "power3.out" });
+
+        // Features Section
+        gsap.from(".feature-header > *", {
+            scrollTrigger: { trigger: "#features", start: "top 85%" },
+            y: 30, opacity: 0, duration: 0.8, stagger: 0.2, ease: "power3.out"
+        });
+        
+        gsap.from(".feature-card", {
+            scrollTrigger: { trigger: ".feature-grid", start: "top 80%" },
+            y: 40, opacity: 0, duration: 0.6, stagger: 0.15, ease: "power2.out"
+        });
+
+        // Models Section
+        gsap.from(".model-header > *", {
+            scrollTrigger: { trigger: "#models", start: "top 85%" },
+            y: 30, opacity: 0, duration: 0.8, stagger: 0.2, ease: "power3.out"
+        });
+
+        gsap.from(".model-card", {
+            scrollTrigger: { trigger: ".model-grid", start: "top 80%" },
+            scale: 0.95, y: 30, opacity: 0, duration: 0.5, stagger: 0.1, ease: "back.out(1.2)"
+        });
+
+        // Install Section
+        gsap.from("#install-bg", {
+            scrollTrigger: { trigger: "#install", start: "top bottom", end: "bottom top", scrub: true },
+            skewY: 2, y: 50
+        });
+
+        gsap.from(".install-content > h2, .install-content > p", {
+            scrollTrigger: { trigger: "#install", start: "top 80%" },
+            y: 30, opacity: 0, duration: 0.8, stagger: 0.2, ease: "power3.out"
+        });
+
+        gsap.from("#install-card", {
+            scrollTrigger: { trigger: "#install-card", start: "top 85%" },
+            scale: 0.95, y: 40, opacity: 0, duration: 0.8, ease: "back.out(1)"
+        });
+
+        // Footer
+        gsap.from(".footer-grid > div", {
+            scrollTrigger: { trigger: "footer", start: "top 95%" },
+            y: 30, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power3.out"
+        });
+    </script>
+</body></html>
