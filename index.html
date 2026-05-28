@@ -3,22 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AetherAI CLI Pro | God-Tier Agentic Neural Engine</title>
+    <title>AetherAI CLI Pro | Agentic Neural Engine</title>
     <meta name="description" content="Zero-install, AI-native terminal assistant powered by advanced neural engines. Transform your workflow with auto-scaffolding, JARVIS mode, and bug scanning.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- GSAP & Motion (Vanilla Framer Motion) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script type="module">
+        import { animate, spring, stagger, inView } from "https://cdn.jsdelivr.net/npm/motion@11.11.13/+esm";
+        window.Motion = { animate, spring, stagger, inView };
+    </script>
+
+    <!-- Spline 3D Viewer -->
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.51/build/spline-viewer.js"></script>
+
     <style>
         :root {
-            --bg-base: #0f172a;
-            --bg-surface: #1e293b;
-            --primary: #7dcfff;     /* Tokyo Night Cyan */
-            --secondary: #9ece6a;   /* Tokyo Night Green */
-            --accent: #bb9af7;      /* Tokyo Night Purple */
-            --danger: #f7768e;      /* Tokyo Night Red */
-            --text-main: #c0caf5;
-            --text-muted: #565f89;
-            --glass-bg: rgba(30, 41, 59, 0.6);
-            --glass-border: rgba(125, 207, 255, 0.15);
-            --neon-glow: 0 0 20px rgba(125, 207, 255, 0.3);
+            --bg-base: #09090b;
+            --bg-surface: #18181b;
+            --primary: #38bdf8;
+            --secondary: #a78bfa;
+            --accent: #f472b6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(24, 24, 27, 0.4);
+            --glass-border: rgba(56, 189, 248, 0.2);
+            --neon-glow: 0 0 30px rgba(56, 189, 248, 0.3);
         }
 
         * {
@@ -34,38 +45,30 @@
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
-            position: relative;
         }
 
-        /* Radial Background Glows */
-        body::before, body::after {
-            content: '';
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            filter: blur(120px);
+        /* Spline 3D Background */
+        .spline-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Overlay to darken background */
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, transparent 0%, var(--bg-base) 100%);
             z-index: -1;
-            opacity: 0.15;
-            animation: pulse 8s infinite alternate ease-in-out;
-        }
-
-        body::before {
-            background: var(--primary);
-            top: -200px;
-            left: -200px;
-        }
-
-        body::after {
-            background: var(--accent);
-            bottom: 20%;
-            right: -200px;
-            animation-delay: 2s;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.15; }
-            100% { transform: scale(1.2); opacity: 0.25; }
+            pointer-events: none;
         }
 
         /* Navbar */
@@ -74,9 +77,10 @@
             justify-content: space-between;
             align-items: center;
             padding: 1.5rem 5%;
-            backdrop-filter: blur(12px);
-            background: rgba(15, 23, 42, 0.8);
-            position: sticky;
+            backdrop-filter: blur(20px);
+            background: rgba(9, 9, 11, 0.7);
+            position: fixed;
+            width: 100%;
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--glass-border);
@@ -86,70 +90,72 @@
             font-family: 'Fira Code', monospace;
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--primary);
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-decoration: none;
-            text-shadow: 0 0 10px rgba(125, 207, 255, 0.5);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .logo span {
-            color: var(--text-main);
         }
 
         .nav-links a {
             color: var(--text-muted);
             text-decoration: none;
-            margin-left: 2rem;
+            margin-left: 2.5rem;
             font-size: 0.9rem;
             font-weight: 600;
-            transition: color 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
+            transition: color 0.3s;
         }
 
         .nav-links a:hover {
-            color: var(--primary);
-            text-shadow: 0 0 8px rgba(125, 207, 255, 0.4);
+            color: var(--text-main);
+        }
+
+        /* Sections common */
+        section {
+            padding: 8rem 5% 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
         }
 
         /* Hero Section */
         .hero {
-            min-height: 85vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 4rem 1rem;
+            padding-top: 120px;
         }
 
-        .badge {
-            background: rgba(187, 154, 247, 0.1);
-            color: var(--accent);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(187, 154, 247, 0.3);
-            display: inline-block;
-        }
-
-        h1 {
-            font-size: clamp(3rem, 6vw, 5rem);
+        .hero h1 {
+            font-size: clamp(3.5rem, 8vw, 6rem);
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 1.5rem;
             letter-spacing: -2px;
-            background: linear-gradient(135deg, #fff, var(--primary));
+            background: linear-gradient(135deg, #fff 30%, var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .subtitle {
+        .hero p {
             font-size: 1.25rem;
             color: var(--text-muted);
             max-width: 600px;
@@ -157,33 +163,32 @@
             font-weight: 300;
         }
 
-        /* Terminal Window */
-        .terminal-container {
+        /* 3D Terminal */
+        .terminal-wrapper {
+            perspective: 1000px;
             width: 100%;
-            max-width: 700px;
-            background: #1a1b26; /* Tokyo Night bg */
-            border-radius: 12px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), var(--neon-glow);
-            border: 1px solid var(--glass-border);
-            overflow: hidden;
+            max-width: 750px;
             margin: 0 auto;
-            text-align: left;
-            position: relative;
-            transform: translateY(0);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .terminal-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6), 0 0 30px rgba(125, 207, 255, 0.4);
+        .terminal-container {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), var(--neon-glow);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+            text-align: left;
+            transform-style: preserve-3d;
+            transition: transform 0.1s;
         }
 
         .terminal-header {
-            background: #15161e;
-            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
         .mac-btns {
@@ -196,308 +201,350 @@
             height: 12px;
             border-radius: 50%;
         }
-        .close { background: #f7768e; }
-        .min { background: #e0af68; }
-        .max { background: #9ece6a; }
+        .close { background: #f87171; }
+        .min { background: #fbbf24; }
+        .max { background: #34d399; }
 
         .terminal-title {
             color: var(--text-muted);
             font-family: 'Fira Code', monospace;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             margin: 0 auto;
-            transform: translateX(-24px); /* Offset mac btns */
+            transform: translateX(-24px);
         }
 
         .terminal-body {
-            padding: 2rem;
+            padding: 2.5rem 2rem;
             font-family: 'Fira Code', monospace;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .command-wrap {
-            display: flex;
-            align-items: center;
             overflow-x: auto;
             white-space: nowrap;
-            scrollbar-width: none; /* Firefox */
-        }
-        
-        .command-wrap::-webkit-scrollbar {
-            display: none; /* Safari and Chrome */
+            scrollbar-width: none;
         }
 
         .command-text {
-            color: var(--secondary);
-            font-weight: 500;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
         }
 
         .copy-btn {
-            background: rgba(125, 207, 255, 0.1);
+            background: rgba(56, 189, 248, 0.15);
             color: var(--primary);
             border: 1px solid var(--primary);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
-            font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            flex-shrink: 0;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
         }
 
         .copy-btn:hover {
             background: var(--primary);
             color: #000;
-        }
-        
-        .copy-btn.copied {
-            background: var(--secondary);
-            border-color: var(--secondary);
-            color: #1a1b26;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
+            transform: translateY(-2px);
         }
 
-        /* Features Section */
-        .features {
-            padding: 6rem 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-        
-        .section-header h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .grid {
+        /* How to Use Section */
+        .steps-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
+            margin-top: 3rem;
         }
 
-        .card {
+        .step-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            padding: 2.5rem 2rem;
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+            padding: 2.5rem;
+            border-radius: 20px;
             position: relative;
-            overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
-        .card::before {
-            content: '';
+        .step-number {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-
-        .card:hover::before {
-            transform: translateX(100%);
-        }
-
-        .card:hover {
-            border-color: rgba(125, 207, 255, 0.4);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            display: inline-block;
-        }
-
-        .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #fff;
+            top: -20px;
+            left: 20px;
+            font-size: 4rem;
+            font-weight: 800;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.1);
             font-family: 'Fira Code', monospace;
         }
 
-        .card p {
+        .step-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            margin-top: 1rem;
+            color: var(--primary);
+        }
+        
+        .step-card code {
+            display: block;
+            background: #000;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            color: var(--secondary);
+            margin-top: 1rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* AI Models Section */
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .model-card {
+            background: linear-gradient(145deg, rgba(30,41,59,0.8), rgba(15,23,42,0.9));
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .model-card:hover {
+            border-color: var(--secondary);
+            box-shadow: 0 10px 30px rgba(167, 139, 250, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .model-card img {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+        }
+
+        .model-card h4 {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .model-card p {
             color: var(--text-muted);
-            font-size: 1rem;
-            line-height: 1.7;
+            font-size: 0.9rem;
         }
 
         /* Footer */
         footer {
-            padding: 4rem 5% 2rem;
             text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(15, 23, 42, 0.5);
-        }
-
-        .footer-logo {
-            font-family: 'Fira Code', monospace;
-            font-size: 1.2rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-        
-        .footer-logo span {
-            color: var(--text-main);
-        }
-
-        .author {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
-        }
-
-        .author strong {
-            color: var(--accent);
-        }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .terminal-body {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .command-wrap {
-                margin-bottom: 1rem;
-            }
-            .copy-btn {
-                justify-content: center;
-            }
-            h1 { font-size: 2.5rem; }
+            padding: 4rem 2rem;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 4rem;
+            background: rgba(0,0,0,0.5);
         }
     </style>
 </head>
 <body>
 
+    <!-- 3D Spline Background -->
+    <div class="spline-bg">
+        <spline-viewer url="https://prod.spline.design/6Wq1Q7YGyMvmAq98/scene.splinecode"></spline-viewer>
+    </div>
+    <div class="bg-overlay"></div>
+
     <nav>
-        <a href="#" class="logo">AetherAI<span>.cli</span></a>
+        <a href="#" class="logo">AetherAI</a>
         <div class="nav-links">
-            <a href="#features">Features</a>
+            <a href="#usage">Cara Pemakaian</a>
+            <a href="#models">Model AI</a>
             <a href="https://github.com/AzzamCodex" target="_blank">GitHub</a>
         </div>
     </nav>
 
     <section class="hero">
-        <div class="badge">v2.0.0 is live 🚀</div>
-        <h1>Zero-Install Neural<br>Agentic Engine.</h1>
-        <p class="subtitle">Experience the future of development. A terminal AI that literally writes code, scaffolds projects, and fixes bugs autonomously—no bloated installations required.</p>
+        <h1 class="hero-title">Zero-Install<br>Agentic Engine.</h1>
+        <p class="hero-sub">Platform AI CLI pertama yang mampu merancang arsitektur, memperbaiki bug otomatis, dan mengeksekusi kode secara mandiri tanpa instalasi global.</p>
         
-        <div class="terminal-container">
-            <div class="terminal-header">
-                <div class="mac-btns">
-                    <div class="mac-btn close"></div>
-                    <div class="mac-btn min"></div>
-                    <div class="mac-btn max"></div>
+        <div class="terminal-wrapper">
+            <div class="terminal-container" id="terminal3d">
+                <div class="terminal-header">
+                    <div class="mac-btns">
+                        <div class="mac-btn close"></div>
+                        <div class="mac-btn min"></div>
+                        <div class="mac-btn max"></div>
+                    </div>
+                    <div class="terminal-title">powershell.exe</div>
                 </div>
-                <div class="terminal-title">powershell.exe</div>
+                <div class="terminal-body">
+                    <div class="command-wrap">
+                        <span class="command-text">powershell -c "irm https://aetherai.azzamcodex.site/install.ps1 | iex"</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyCommand(this)">
+                        Copy
+                    </button>
+                </div>
             </div>
-            <div class="terminal-body">
-                <div class="command-wrap">
-                    <span class="command-text" id="installCmd">powershell -c "irm https://aetherai.azzamcodex.site/install.ps1 | iex"</span>
-                </div>
-                <button class="copy-btn" id="copyBtn" onclick="copyCommand()">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                    Copy
-                </button>
+            <div style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem; font-family: 'Fira Code', monospace;">
+                Mac/Linux: <span style="color: var(--primary)">curl -fsSL https://aetherai.azzamcodex.site/install.sh | bash</span>
             </div>
         </div>
-        <p style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem; font-family: 'Fira Code', monospace;">
-            Mac/Linux: <span style="color: var(--accent)">curl -fsSL https://aetherai.azzamcodex.site/install.sh | bash</span>
-        </p>
     </section>
 
-    <section class="features" id="features">
+    <section id="usage">
         <div class="section-header">
-            <h2>God-Tier Capabilities</h2>
-            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Equipped with raw intelligence and filesystem access. AetherAI is not just a chatbot; it's a junior developer running inside your terminal.</p>
+            <h2>Cara Pemakaian</h2>
+            <p style="color: var(--text-muted)">Workflow tingkat dewa dalam 3 langkah mudah.</p>
         </div>
-        
-        <div class="grid">
-            <div class="card">
-                <div class="card-icon">🏗️</div>
-                <h3>/scaffold</h3>
-                <p>Generate entire project architectures in one command. AetherAI will dynamically design folders, write boilerplate code, and create all files on your local drive instantly.</p>
+        <div class="steps-container">
+            <div class="step-card step-anim">
+                <div class="step-number">01</div>
+                <h3>Jalankan Installer</h3>
+                <p>Cukup *copy-paste* perintah instalasi ke terminal kamu. AetherAI akan mengunduh inti AI ke dalam temporary memory secara instan tanpa mengotori sistem.</p>
+                <code>irm https://... | iex</code>
             </div>
-            
-            <div class="card">
-                <div class="card-icon">⚡</div>
-                <h3>/jarvis Mode</h3>
-                <p>Toggle autonomous execution. Bypass safety confirmation prompts and let the AI run bash commands, install dependencies, and setup infrastructure autonomously.</p>
+            <div class="step-card step-anim">
+                <div class="step-number">02</div>
+                <h3>Panggil Agent</h3>
+                <p>Setelah masuk sesi AetherAI, kamu bisa memintanya membuat proyek lengkap atau sekadar memperbaiki script.</p>
+                <code>/scaffold "Buat web react login"</code>
             </div>
-            
-            <div class="card">
-                <div class="card-icon">🐛</div>
-                <h3>/test Auto-Fixer</h3>
-                <p>Run <code>/test npm run build</code> and let AetherAI watch the output. If it crashes, the AI intercepts the red stack trace, analyzes the bug, and patches your files automatically.</p>
+            <div class="step-card step-anim">
+                <div class="step-number">03</div>
+                <h3>Auto-Fix (JARVIS)</h3>
+                <p>AetherAI akan memindai error di terminalmu dan otomatis memperbaikinya tanpa campur tangan manusia.</p>
+                <code>/test npm run build</code>
             </div>
-            
-            <div class="card">
-                <div class="card-icon">🧠</div>
-                <h3>System Memory</h3>
-                <p>Advanced contextual awareness. Mention <code>auth.js</code> in chat, and AetherAI will silently attach the file content to the neural payload without you having to copy-paste anything.</p>
+        </div>
+    </section>
+
+    <section id="models">
+        <div class="section-header">
+            <h2>Model AI Kelas Dunia</h2>
+            <p style="color: var(--text-muted)">Didukung oleh infrastruktur OpenRouter Neural Engine.</p>
+        </div>
+        <div class="models-grid">
+            <div class="model-card model-anim">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Anthropic_logo.svg/1200px-Anthropic_logo.svg.png" style="object-fit: contain; filter: brightness(0) invert(1);" alt="Claude">
+                <h4>Claude 3.5 Sonnet</h4>
+                <p>Kecerdasan coding tertinggi dengan konteks memori yang sangat luas.</p>
             </div>
-            
-            <div class="card">
-                <div class="card-icon">👁️</div>
-                <h3>Cyber Recon Mode</h3>
-                <p>Built-in <code>analyze &lt;url&gt;</code> feature to provide ethical cybersecurity methodology, vulnerability assessment steps, and header analysis (strictly for legal usage).</p>
+            <div class="model-card model-anim">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" style="object-fit: contain; filter: brightness(0) invert(1);" alt="GPT-4o">
+                <h4>GPT-4o (Omni)</h4>
+                <p>Respons secepat kilat untuk troubleshooting dan error parsing log.</p>
             </div>
-            
-            <div class="card">
-                <div class="card-icon">🌐</div>
-                <h3>Zero Install</h3>
-                <p>No <code>npm install -g</code> pollution. Runs purely from a serverless executable bundle. Fully self-contained, wicked fast, and always up-to-date.</p>
+            <div class="model-card model-anim">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Meta_Inc._logo.svg/1024px-Meta_Inc._logo.svg.png" style="object-fit: contain; filter: brightness(0) invert(1);" alt="Llama 3">
+                <h4>Meta Llama 3</h4>
+                <p>Model open-source terkuat untuk eksekusi tugas skrip ringan.</p>
             </div>
         </div>
     </section>
 
     <footer>
-        <div class="footer-logo">AetherAI<span>.cli</span></div>
-        <div class="author">Crafted with precision by <strong>Azzam Codex</strong></div>
-        <p style="font-size: 0.8rem; color: #334155;">&copy; 2026 AetherAI CLI Pro. Powered by advanced LLMs via OpenRouter.</p>
+        <h3 style="color: var(--text-main); font-family: 'Fira Code', monospace; margin-bottom: 1rem;">AetherAI.cli</h3>
+        <p style="color: var(--text-muted)">Dikembangkan dengan dedikasi tinggi oleh <strong>Azzam Codex</strong></p>
     </footer>
 
     <script>
-        function copyCommand() {
+        // --- 1. Copy Command Logic ---
+        function copyCommand(btn) {
             const text = 'powershell -c "irm https://aetherai.azzamcodex.site/install.ps1 | iex"';
-            const btn = document.getElementById('copyBtn');
-            
             navigator.clipboard.writeText(text).then(() => {
                 const originalHtml = btn.innerHTML;
-                btn.classList.add('copied');
-                btn.innerHTML = `
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    Copied!
-                `;
-                
+                btn.innerHTML = 'Copied! ✓';
+                btn.style.background = 'var(--secondary)';
+                btn.style.borderColor = 'var(--secondary)';
+                btn.style.color = '#000';
                 setTimeout(() => {
-                    btn.classList.remove('copied');
                     btn.innerHTML = originalHtml;
+                    btn.style = '';
                 }, 2000);
             });
         }
+
+        // --- 2. 3D Hover Effect using Vanilla JS (Tilt) ---
+        const terminal = document.getElementById('terminal3d');
+        const wrapper = document.querySelector('.terminal-wrapper');
+
+        wrapper.addEventListener('mousemove', (e) => {
+            const rect = wrapper.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / centerY) * -10; // Max 10 deg
+            const rotateY = ((x - centerX) / centerX) * 10;
+            
+            terminal.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+        });
+
+        wrapper.addEventListener('mouseleave', () => {
+            terminal.style.transform = `rotateX(0) rotateY(0) translateZ(0)`;
+        });
+
+        // --- 3. Animations Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait for Motion API to load
+            setTimeout(() => {
+                if (window.Motion) {
+                    const { animate, stagger, inView, spring } = window.Motion;
+
+                    // Hero Intro Animation
+                    animate(".hero-title", 
+                        { y: [50, 0], opacity: [0, 1] }, 
+                        { duration: 0.8, easing: spring() }
+                    );
+                    animate(".hero-sub", 
+                        { y: [30, 0], opacity: [0, 1] }, 
+                        { duration: 0.8, delay: 0.2 }
+                    );
+                    animate(".terminal-wrapper", 
+                        { scale: [0.9, 1], opacity: [0, 1], y: [40, 0] }, 
+                        { duration: 0.8, delay: 0.4, easing: spring() }
+                    );
+
+                    // Steps Scroll Animation
+                    inView(".steps-container", (info) => {
+                        animate(".step-anim", 
+                            { opacity: [0, 1], y: [50, 0] }, 
+                            { delay: stagger(0.2), duration: 0.6 }
+                        );
+                    });
+
+                    // Models Scroll Animation
+                    inView(".models-grid", (info) => {
+                        animate(".model-anim", 
+                            { opacity: [0, 1], scale: [0.8, 1] }, 
+                            { delay: stagger(0.15), duration: 0.5, easing: spring() }
+                        );
+                    });
+                }
+            }, 500);
+
+            // GSAP Navbar Scroll Effect
+            gsap.registerPlugin(ScrollTrigger);
+            gsap.to("nav", {
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top -50px",
+                    toggleClass: { targets: "nav", className: "scrolled" }
+                },
+                boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+                duration: 0.3
+            });
+        });
     </script>
 </body>
 </html>
