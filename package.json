@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:local": "node aetherai.cjs",
-    "build": "mkdir -p public && cp index.html install.ps1 install.sh aetherai.cjs public/",
+    "build": "node build.js",
     "build:local": "npx esbuild src/index.js --bundle --platform=node --format=cjs --minify --outfile=aetherai.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AetherAI CLI Pro | God-Tier Agentic Neural Engine</title>
+    <meta name="description" content="Zero-install, AI-native terminal assistant powered by advanced neural engines. Transform your workflow with auto-scaffolding, JARVIS mode, and bug scanning.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0f172a;
+            --bg-surface: #1e293b;
+            --primary: #7dcfff;     /* Tokyo Night Cyan */
+            --secondary: #9ece6a;   /* Tokyo Night Green */
+            --accent: #bb9af7;      /* Tokyo Night Purple */
+            --danger: #f7768e;      /* Tokyo Night Red */
+            --text-main: #c0caf5;
+            --text-muted: #565f89;
+            --glass-bg: rgba(30, 41, 59, 0.6);
+            --glass-border: rgba(125, 207, 255, 0.15);
+            --neon-glow: 0 0 20px rgba(125, 207, 255, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Radial Background Glows */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.15;
+            animation: pulse 8s infinite alternate ease-in-out;
+        }
+
+        body::before {
+            background: var(--primary);
+            top: -200px;
+            left: -200px;
+        }
+
+        body::after {
+            background: var(--accent);
+            bottom: 20%;
+            right: -200px;
+            animation-delay: 2s;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.15; }
+            100% { transform: scale(1.2); opacity: 0.25; }
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            text-shadow: 0 0 10px rgba(125, 207, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo span {
+            color: var(--text-main);
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+            text-shadow: 0 0 8px rgba(125, 207, 255, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+
+        .badge {
+            background: rgba(187, 154, 247, 0.1);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(187, 154, 247, 0.3);
+            display: inline-block;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+        }
+
+        /* Terminal Window */
+        .terminal-container {
+            width: 100%;
+            max-width: 700px;
+            background: #1a1b26; /* Tokyo Night bg */
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), var(--neon-glow);
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            margin: 0 auto;
+            text-align: left;
+            position: relative;
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .terminal-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6), 0 0 30px rgba(125, 207, 255, 0.4);
+        }
+
+        .terminal-header {
+            background: #15161e;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .mac-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .mac-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .close { background: #f7768e; }
+        .min { background: #e0af68; }
+        .max { background: #9ece6a; }
+
+        .terminal-title {
+            color: var(--text-muted);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            margin: 0 auto;
+            transform: translateX(-24px); /* Offset mac btns */
+        }
+
+        .terminal-body {
+            padding: 2rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .command-wrap {
+            display: flex;
+            align-items: center;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .command-wrap::-webkit-scrollbar {
+            display: none; /* Safari and Chrome */
+        }
+
+        .command-text {
+            color: var(--secondary);
+            font-weight: 500;
+        }
+
+        .copy-btn {
+            background: rgba(125, 207, 255, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            color: #000;
+        }
+        
+        .copy-btn.copied {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: #1a1b26;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .card:hover {
+            border-color: rgba(125, 207, 255, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 5% 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .footer-logo {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .footer-logo span {
+            color: var(--text-main);
+        }
+
+        .author {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .author strong {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .terminal-body {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .command-wrap {
+                margin-bottom: 1rem;
+            }
+            .copy-btn {
+                justify-content: center;
+            }
+            h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="logo">AetherAI<span>.cli</span></a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="https://github.com/AzzamCodex" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="badge">v2.0.0 is live 🚀</div>
+        <h1>Zero-Install Neural<br>Agentic Engine.</h1>
+        <p class="subtitle">Experience the future of development. A terminal AI that literally writes code, scaffolds projects, and fixes bugs autonomously—no bloated installations required.</p>
+        
+        <div class="terminal-container">
+            <div class="terminal-header">
+                <div class="mac-btns">
+                    <div class="mac-btn close"></div>
+                    <div class="mac-btn min"></div>
+                    <div class="mac-btn max"></div>
+                </div>
+                <div class="terminal-title">powershell.exe</div>
+            </div>
+            <div class="terminal-body">
+                <div class="command-wrap">
+                    <span class="command-text" id="installCmd">powershell -c "irm https://aetherai.azzamcodex.site/install.ps1 | iex"</span>
+                </div>
+                <button class="copy-btn" id="copyBtn" onclick="copyCommand()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    Copy
+                </button>
+            </div>
+        </div>
+        <p style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem; font-family: 'Fira Code', monospace;">
+            Mac/Linux: <span style="color: var(--accent)">curl -fsSL https://aetherai.azzamcodex.site/install.sh | bash</span>
+        </p>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>God-Tier Capabilities</h2>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Equipped with raw intelligence and filesystem access. AetherAI is not just a chatbot; it's a junior developer running inside your terminal.</p>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <div class="card-icon">🏗️</div>
+                <h3>/scaffold</h3>
+                <p>Generate entire project architectures in one command. AetherAI will dynamically design folders, write boilerplate code, and create all files on your local drive instantly.</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-icon">⚡</div>
+                <h3>/jarvis Mode</h3>
+                <p>Toggle autonomous execution. Bypass safety confirmation prompts and let the AI run bash commands, install dependencies, and setup infrastructure autonomously.</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-icon">🐛</div>
+                <h3>/test Auto-Fixer</h3>
+                <p>Run <code>/test npm run build</code> and let AetherAI watch the output. If it crashes, the AI intercepts the red stack trace, analyzes the bug, and patches your files automatically.</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-icon">🧠</div>
+                <h3>System Memory</h3>
+                <p>Advanced contextual awareness. Mention <code>auth.js</code> in chat, and AetherAI will silently attach the file content to the neural payload without you having to copy-paste anything.</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-icon">👁️</div>
+                <h3>Cyber Recon Mode</h3>
+                <p>Built-in <code>analyze &lt;url&gt;</code> feature to provide ethical cybersecurity methodology, vulnerability assessment steps, and header analysis (strictly for legal usage).</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-icon">🌐</div>
+                <h3>Zero Install</h3>
+                <p>No <code>npm install -g</code> pollution. Runs purely from a serverless executable bundle. Fully self-contained, wicked fast, and always up-to-date.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">AetherAI<span>.cli</span></div>
+        <div class="author">Crafted with precision by <strong>Azzam Codex</strong></div>
+        <p style="font-size: 0.8rem; color: #334155;">&copy; 2026 AetherAI CLI Pro. Powered by advanced LLMs via OpenRouter.</p>
+    </footer>
+
+    <script>
+        function copyCommand() {
+            const text = 'powershell -c "irm https://aetherai.azzamcodex.site/install.ps1 | iex"';
+            const btn = document.getElementById('copyBtn');
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalHtml = btn.innerHTML;
+                btn.classList.add('copied');
+                btn.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Copied!
+                `;
+                
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = originalHtml;
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
