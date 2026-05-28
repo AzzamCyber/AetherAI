@@ -2,6 +2,32 @@
   "buildCommand": "echo 'No build step required'",
   "outputDirectory": ".",
   "cleanUrls": false,
+  "redirects": [
+    {
+      "source": "/install.ps1",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept",
+          "value": "(?i).*text/html.*"
+        }
+      ],
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/install.sh",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept",
+          "value": "(?i).*text/html.*"
+        }
+      ],
+      "destination": "/",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
